@@ -77,14 +77,14 @@ func NewResolver(filepath string, threshold int) (*CommandResolver, error) {
 // Resolve определяет команду в тексте (проверяет всю строку целиком)
 func (r *CommandResolver) Resolve(text string) (string, bool) {
 	cleanText := strings.ToLower(strings.TrimSpace(text))
-	log.Printf("[COMMAND] Checking: '%s' (cleaned: '%s')", text, cleanText)
-	log.Printf("[COMMAND] Available synonyms: %d", len(r.synonyms))
+	// log.Printf("[COMMAND] Checking: '%s' (cleaned: '%s')", text, cleanText)
+	// log.Printf("[COMMAND] Available synonyms: %d", len(r.synonyms))
 
 	// 1. Точное совпадение (вся строка равна синониму)
 	for _, mapping := range r.synonyms {
-		log.Printf("[COMMAND] Comparing '%s' with synonym '%s'", cleanText, mapping.Text)
+		// log.Printf("[COMMAND] Comparing '%s' with synonym '%s'", cleanText, mapping.Text)
 		if cleanText == mapping.Text {
-			log.Printf("[COMMAND] ✓ Exact match found: %s -> %s", cleanText, mapping.CmdName)
+			// log.Printf("[COMMAND] ✓ Exact match found: %s -> %s", cleanText, mapping.CmdName)
 			return mapping.CmdName, mapping.External
 		}
 	}
@@ -96,8 +96,7 @@ func (r *CommandResolver) Resolve(text string) (string, bool) {
 
 	for _, mapping := range r.synonyms {
 		dist := levenshtein.ComputeDistance(cleanText, mapping.Text)
-		log.Printf("[COMMAND] Levenshtein '%s' vs '%s' = %d (threshold: %d)",
-			cleanText, mapping.Text, dist, r.threshold)
+		// log.Printf("[COMMAND] Levenshtein '%s' vs '%s' = %d (threshold: %d)", cleanText, mapping.Text, dist, r.threshold)
 
 		if dist <= r.threshold && dist < minDist {
 			minDist = dist
@@ -107,8 +106,7 @@ func (r *CommandResolver) Resolve(text string) (string, bool) {
 	}
 
 	if bestMatch != "" {
-		log.Printf("[COMMAND] ✓ Fuzzy match found: %s -> %s (dist=%d)",
-			cleanText, bestMatch, minDist)
+		log.Printf("[COMMAND] ✓ Fuzzy match found: %s -> %s (dist=%d)", cleanText, bestMatch, minDist)
 	} else {
 		log.Printf("[COMMAND] ✗ No match found for: '%s'", cleanText)
 	}
